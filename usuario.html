@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventos Disponíveis</title>
-    <!-- Link atualizado para estilo.css -->
     <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
@@ -16,17 +15,20 @@
         </div>
 
         <div class="confirmar-presenca">
-            <h2>Confirme sua Presença</h2>
+            <h2>Inscreva-se</h2>
             <form id="form-presenca">
                 <label for="nome-participante">Seu Nome:</label>
                 <input type="text" id="nome-participante" required>
+
+                <label for="cpf-participante">Seu CPF:</label>
+                <input type="text" id="cpf-participante" required pattern="\d{11}" title="Por favor, insira um CPF válido (11 dígitos).">
 
                 <label for="evento-selecionado">Selecione o Evento:</label>
                 <select id="evento-selecionado" required>
                     <option value="" disabled selected>Escolha um evento</option>
                 </select>
 
-                <button type="submit">Confirmar Presença</button>
+                <button type="submit">Inscrever-se</button> <!-- Alterado para "Inscrever-se" -->
             </form>
         </div>
     </div>

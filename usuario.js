@@ -3,11 +3,12 @@ function carregarEventos() {
     const listaEventos = document.getElementById("lista-eventos");
     const selectEvento = document.getElementById("evento-selecionado");
 
-    // Obter eventos do localStorage
+    listaEventos.innerHTML = '';
+    selectEvento.innerHTML = '<option value="" disabled selected>Escolha um evento</option>';
+
     let eventos = JSON.parse(localStorage.getItem("eventos")) || [];
     
     eventos.forEach(evento => {
-        // Exibir os eventos na lista
         const eventoItem = document.createElement("div");
         eventoItem.classList.add("evento-item");
         eventoItem.innerHTML = `
@@ -15,13 +16,14 @@ function carregarEventos() {
             <p><strong>Palestrante:</strong> ${evento.palestrante}</p>
             <p><strong>Data:</strong> ${evento.data}</p>
             <p><strong>Local:</strong> ${evento.local}</p>
+            <p><strong>Capacidade:</strong> ${evento.capacidade}</p>
+            <p><strong>Participantes Inscritos:</strong> ${evento.participantes.length}</p>
         `;
         listaEventos.appendChild(eventoItem);
 
-        // Adicionar os eventos no select para confirmar presença
         const option = document.createElement("option");
         option.value = evento.nome;
-        option.text = evento.nome;
+        option.textContent = evento.nome;
         selectEvento.appendChild(option);
     });
 }
@@ -31,21 +33,33 @@ document.getElementById("form-presenca").addEventListener("submit", function(e) 
     e.preventDefault();
 
     const nomeParticipante = document.getElementById("nome-participante").value;
+    const cpfParticipante = document.getElementById("cpf-participante").value; // Novo campo para CPF
     const eventoSelecionado = document.getElementById("evento-selecionado").value;
 
     if (eventoSelecionado) {
-        // Adicionar participante na lista de presença do evento
         let eventos = JSON.parse(localStorage.getItem("eventos")) || [];
         const evento = eventos.find(e => e.nome === eventoSelecionado);
 
         if (evento) {
-            evento.participantes.push(nomeParticipante); // Adiciona participante
-            localStorage.setItem("eventos", JSON.stringify(eventos)); // Atualiza no localStorage
-        }
+            // Verifica se o CPF já está inscrito
+            const cpfExistente = evento.participantes.find(participante => participante.cpf === cpfParticipante);
 
-        alert(`Presença confirmada para ${nomeParticipante} no evento ${eventoSelecionado}!`);
+            if (cpfExistente) {
+                alert(`CPF ${cpfParticipante} já está inscrito neste evento.`);
+            } else {
+                // Verifica se a capacidade do evento foi atingida
+                if (evento.participantes.length >= evento.capacidade) {
+                    alert(`Desculpe, a capacidade do evento "${evento.nome}" já foi atingida.`);
+                } else {
+                    // Adiciona participante na lista de presença
+                    evento.participantes.push({ nome: nomeParticipante, cpf: cpfParticipante }); // Adiciona objeto com nome e CPF
+                    localStorage.setItem("eventos", JSON.stringify(eventos)); // Atualiza no localStorage
+                    alert(`Inscrição confirmada para ${nomeParticipante} no evento ${eventoSelecionado}!`);
+                }
+            }
+        }
     }
 });
 
-// Carregar eventos quando a página carregar
+// Carregar eventos ao iniciar
 window.onload = carregarEventos;
