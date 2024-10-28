@@ -1,0 +1,40 @@
+<!--index.html-->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela Inicial</title>
+    <link rel="stylesheet" href="/public/css/estilo.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Bem-vindo ao Sistema de Gerenciamento de Eventos</h1>
+        <div class="opcoes-container">
+            <p>Escolha o caminho desejado:</p>
+            <div class="opcoes">
+                <button onclick="login('usuario')">Usuário</button>
+                <button onclick="login('administrador')">Administrador</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function login(tipo) {
+            if (tipo === 'administrador') {
+                const cpf = prompt("Digite seu CPF:");
+                const codigo = prompt("Digite o código único:");
+
+                if (cpf && codigo === "cachorrovoando.mp4") {
+                    window.location.href = 'administrador.html'; // Redireciona para a página do administrador
+                } else {
+                    alert("CPF ou código incorretos. Tente novamente.");
+                }
+            } else {
+                window.location.href = 'usuario.html'; // Redireciona para a página do usuário
+            }
+        }
+    </script>
+</body>
+</html>
