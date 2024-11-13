@@ -1,7 +1,9 @@
 <?php
+//routes.php
+
 // src/routes.php
 
-require_once '../config/database.php';
+require_once _DIR_ . '/config/database.php';
 require_once 'controllers/UsuarioController.php';
 require_once 'controllers/EventoController.php';
 require_once 'controllers/PresencaController.php';
@@ -75,4 +77,5 @@ switch ($path) {
         echo json_encode(['message' => 'Endpoint não encontrado']);
         break;
 }
+//fim
 ?>

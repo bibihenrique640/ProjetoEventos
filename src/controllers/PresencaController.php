@@ -1,7 +1,9 @@
 <?php
+//PresencaController.php
+
 // src/controllers/PresencaController.php
 
-require_once '../models/Presenca.php';
+require_once _DIR_ . '/../models/Presenca.php';
 
 class PresencaController {
     private $conn;
@@ -28,4 +30,5 @@ class PresencaController {
         return $presenca->listarParticipantesPorEvento($evento_id);
     }
 }
+//fim
 ?>

@@ -1,4 +1,6 @@
 <?php
+//Usuario.php
+
 // src/models/Usuario.php
 
 class Usuario {
@@ -44,4 +46,5 @@ class Usuario {
         return false;
     }
 }
+//fim
 ?>

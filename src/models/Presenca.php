@@ -1,4 +1,6 @@
 <?php
+//Presenca.php
+
 // src/models/Presenca.php
 
 class Presenca {
@@ -45,4 +47,5 @@ class Presenca {
         return $stmt->fetch(PDO::FETCH_ASSOC) ? true : false;
     }
 }
+//fim
 ?>

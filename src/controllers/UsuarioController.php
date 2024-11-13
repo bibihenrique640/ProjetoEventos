@@ -1,7 +1,9 @@
 <?php
+// UsuarioController.php
+
 // src/controllers/UsuarioController.php
 
-require_once '../models/Usuario.php';
+require_once _DIR_ . '/../models/Usuario.php';
 
 class UsuarioController {
     private $conn;
@@ -33,4 +35,5 @@ class UsuarioController {
         return null;
     }
 }
+//fim
 ?>

@@ -1,7 +1,9 @@
 <?php
+//EventoController.php
+
 // src/controllers/EventoController.php
 
-require_once '../models/Evento.php';
+require_once _DIR_ . '/../models/Evento.php';
 
 class EventoController {
     private $conn;
@@ -52,4 +54,5 @@ class EventoController {
         return $evento->buscarEventoPorId($id);
     }
 }
+//fim
 ?>

@@ -1,4 +1,6 @@
 <?php
+//Evento.php
+
 // src/models/Evento.php
 
 class Evento {
@@ -71,4 +73,5 @@ class Evento {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
+//fim
 ?>
