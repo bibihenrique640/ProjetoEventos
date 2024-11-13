@@ -1,7 +1,7 @@
 <?php
 class Database {
     private $host = "localhost";
-    private $db_name = "sistema_eventos";
+    private $db_name = "cadastro_eventos";
     private $username = "root";  // Usuário padrão do XAMPP
     private $password = "";       // Senha padrão do XAMPP é vazia
     public $conn;
