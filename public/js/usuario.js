@@ -1,9 +1,16 @@
-//usuario.js
-// public/js/usuario.js
+// Função para exibir mensagens de feedback
+function mostrarMensagem(tipo, texto) {
+    const mensagem = document.getElementById("mensagem");
+    mensagem.className = tipo; // Define a classe como 'sucesso' ou 'erro'
+    mensagem.textContent = texto;
+    mensagem.style.display = "block";
 
-// Carregar eventos na página do usuário
-// usuario.js
+    setTimeout(() => {
+        mensagem.style.display = "none";
+    }, 3000);
+}
 
+// Evento para inscrição no evento
 document.getElementById("form-presenca").addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -11,33 +18,56 @@ document.getElementById("form-presenca").addEventListener("submit", async (event
     const cpfParticipante = document.getElementById("cpf-participante").value;
     const eventoId = document.getElementById("evento-selecionado").value;
 
-    const response = await fetch("/presenca/confirmar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome: nomeParticipante, cpf: cpfParticipante, evento_id: eventoId }),
-    });
+    try {
+        const response = await fetch("presenca/confirmar.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nome: nomeParticipante, cpf: cpfParticipante, evento_id: eventoId })
+        });
 
-    if (response.ok) {
-        alert("Inscrição confirmada!");
-    } else {
-        alert("Erro ao confirmar presença.");
+        const result = await response.json();
+
+        if (response.ok) {
+            mostrarMensagem("sucesso", result.message);
+            document.getElementById("form-presenca").reset();
+        } else {
+            mostrarMensagem("erro", result.message); // Exibe a mensagem de erro
+        }
+    } catch (error) {
+        console.error("Erro ao confirmar presença:", error);
+        mostrarMensagem("erro", "Erro ao conectar com o servidor.");
     }
 });
 
-// Função para listar eventos no dropdown
+
+// Função para listar eventos no campo de seleção
 async function listarEventos() {
-    const response = await fetch("/evento/listar", { method: "GET" });
-    const eventos = await response.json();
+    try {
+        const response = await fetch("evento/listar.php", { method: "GET" });
+        
+        if (!response.ok) {
+            throw new Error("Erro ao carregar eventos. Status: " + response.status);
+        }
 
-    const eventoSelect = document.getElementById("evento-selecionado");
-    eventoSelect.innerHTML = '<option value="" disabled selected>Escolha um evento</option>';
+        // Tente converter a resposta em JSON
+        const eventos = await response.json();
+        console.log("Eventos recebidos:", eventos); // Log dos eventos recebidos
 
-    eventos.forEach((evento) => {
-        const option = document.createElement("option");
-        option.value = evento.id;
-        option.textContent = evento.nome;
-        eventoSelect.appendChild(option);
-    });
+        const eventoSelect = document.getElementById("evento-selecionado");
+        eventoSelect.innerHTML = '<option value="" disabled selected>Escolha um evento</option>';
+
+        eventos.forEach((evento) => {
+            const option = document.createElement("option");
+            option.value = evento.id;
+            option.textContent = `${evento.nome} - ${evento.data_evento}`;
+            eventoSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error("Erro ao carregar eventos:", error);
+        mostrarMensagem("erro", "Erro ao conectar com o servidor.");
+    }
 }
 
-listarEventos(); // Carregar os eventos no dropdown
+// Inicializa a listagem de eventos ao carregar
+listarEventos();
+

@@ -1,127 +1,119 @@
-```markdown
-# Projeto Eventos
+# Sistema de Gerenciamento de Eventos
 
-Este é um sistema de gerenciamento de eventos e presença, desenvolvido com front-end em HTML, CSS e JavaScript e back-end em PHP, com banco de dados MySQL. O sistema permite o registro de usuários, criação e edição de eventos, e confirmação de presença em eventos.
+## Índice
 
-## 1. Estrutura do Projeto
+1. [Descrição do Projeto](#descrição-do-projeto)
+2. [Funcionalidades](#funcionalidades)
+3. [Tecnologias Utilizadas](#tecnologias-utilizadas)
+4. [Instalação e Configuração](#instalação-e-configuração)
+5. [Estrutura de Pastas](#estrutura-de-pastas)
+6. [Configurações do Banco de Dados](#configurações-do-banco-de-dados)
+7. [Como Usar](#como-usar)
+8. [Contribuições](#contribuições)
+9. [Licença](#licença)
 
-```plaintext
-MEU_PROJETO/
-│
-├── database/                     # Arquivo do banco de dados
-|   ├── Dump20241029.sql                  # documento do banco de dados
-|
-├── public/                  # Arquivos públicos acessíveis pelo navegador
-│   ├── .htaccess         # Configuração para as rotas
-│   ├── index.html           # Página inicial
-│   ├── administrador.html    # Página para administrador
-│   ├── usuario.html         # Página para usuário comum
-│   ├── index.php         # Página inicial para as rotas
-│   ├── js/                  # Scripts JavaScript
-│   │   ├── administrador.js 
-│   │   └── usuario.js       
-│   └── css/
-│       └── estilo.css       # Estilos CSS
-│
-├── src/                     # Lógica de back-end em PHP
-|   ├── config/                  # Configurações
-|   │   └── database.php         # Configuração do banco de dados
-│   ├── controllers/         # Controladores para gerenciar lógica de negócio
-│   │   ├── UsuarioController.php
-│   │   ├── EventoController.php
-│   │   └── PresencaController.php
-│   ├── models/              # Modelos para interações com o banco
-│   │   ├── Usuario.php
-│   │   ├── Evento.php
-│   │   └── Presenca.php
-│   └── routes.php           # Roteamento das requisições
-│
-└── README.md                # Documentação do projeto
-```
+---
 
-## 2. Tecnologias Utilizadas
+## 1. Descrição do Projeto
+
+Este projeto é um sistema de gerenciamento de eventos desenvolvido para permitir que os administradores organizem eventos e que os usuários possam se inscrever neles. A aplicação permite a criação, visualização e gerenciamento de eventos, além da inscrição dos usuários com feedback visual e mensagens de sucesso ou erro.
+
+## 2. Funcionalidades
+
+- **Para Administradores**:
+  - Criar eventos com nome, palestrante, data, local e capacidade.
+  - Visualizar a lista de eventos.
+  - Editar e excluir eventos.
+  
+- **Para Usuários**:
+  - Visualizar eventos disponíveis.
+  - Inscrever-se em eventos com nome e CPF.
+
+## 3. Tecnologias Utilizadas
 
 - **Frontend**: HTML, CSS, JavaScript
-- **Backend**: PHP
+- **Backend**: PHP (usando PDO para conexão ao banco de dados)
 - **Banco de Dados**: MySQL
+- **Ambiente de Desenvolvimento**: XAMPP (Apache e MySQL)
 
+## 4. Instalação e Configuração
 
-# Documentação do Banco de Dados `cadastro_eventos`
+1. **Clonar o Repositório**: Clone este repositório em sua máquina local.
+   ```bash
+   git clone https://github.com/bibihenrique640/ProjetoEventos.git
+   ```
+   
+2. **Configurar o XAMPP**:
+   - Coloque a pasta do projeto dentro da pasta `htdocs` do XAMPP.
+   - Inicie o Apache e o MySQL no painel do XAMPP.
 
-## 1. Introdução
+3. **Configurar o Banco de Dados**:
+   - Acesse o phpMyAdmin (normalmente em [http://localhost/phpmyadmin](http://localhost/phpmyadmin)).
+   - Crie um banco de dados com o nome adequado (por exemplo, `sistema_eventos`).
+   - Importe o arquivo `banco.sql` (ou configure as tabelas manualmente conforme descrito abaixo).
 
-Este banco de dados gerencia informações de eventos e presenças para o sistema de registro de visitantes do museu. Ele armazena dados sobre usuários, visitantes, eventos e registros de presença. O sistema permite diferenciar administradores de usuários comuns e registra quais visitantes participaram de eventos específicos.
+4. **Configurar a Conexão com o Banco**:
+   - Edite o arquivo `config/db_connect.php` e atualize as credenciais do banco de dados conforme necessário:
+     ```php
+     <?php
+     $host = 'localhost';
+     $db = 'sistema_eventos';
+     $user = 'root';
+     $pass = '';
+     
+     try {
+         $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
+         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+     } catch (PDOException $e) {
+         die("Erro ao conectar ao banco de dados: " . $e->getMessage());
+     }
+     ?>
+     ```
 
-## 2. Estrutura do Banco de Dados
+## 5. Estrutura de Pastas
 
-O banco de dados contém as seguintes tabelas principais:
+A estrutura do projeto é organizada da seguinte forma:
 
-- **admin**: registra administradores do sistema.
-- **comum**: armazena dados de visitantes comuns.
-- **eventos**: contém informações dos eventos.
-- **presenca**: relaciona visitantes com eventos específicos, registrando a presença.
-- **usuario**: tabela de usuários do sistema, com dados de tipo e vínculo com visitantes.
+```
+meu_projeto/
+├── index.php                    # Redireciona para a página inicial
+├── public/
+│   ├── index.html                # Página inicial
+│   ├── administrador.html         # Página do administrador
+│   ├── usuario.html               # Página do usuário
+│   ├── evento/
+│   │   ├── criar.php              # Endpoint para criar eventos
+│   │   ├── editar.php              # Endpoint para editar eventos
+│   │   ├── excluir.php              # Endpoint para excluir eventos
+│   │   └── listar.php             # Endpoint para listar eventos
+│   ├── presenca/
+│   │   └── confirmar.php          # Endpoint para confirmar inscrições
+│   ├── css/
+│   │   └── estilo.css             # Arquivo de estilos CSS
+│   ├── js/
+│       ├── administrador.js       # Scripts para administrador
+│       └── usuario.js             # Scripts para usuário
+└── config/
+    └── db_connect.php             # Conexão com o banco de dados
+```
 
-## 3. Descrição das Tabelas e Campos
+## 6. Configurações do Banco de Dados
 
-### Tabela `admin`
-Registra administradores do sistema.
+O banco de dados é composto por duas tabelas principais:
 
-| Nome do Campo | Tipo     | Chave       | NULL | Descrição                                                                                      |
-|---------------|----------|-------------|------|------------------------------------------------------------------------------------------------|
-| codAdmin      | FLOAT    | Primária    | Não  | Código único para o administrador                                                              |
-| cpf           | CHAR(11) | Estrangeira | Não  | CPF do administrador, chave estrangeira para `usuario(cpf)` para vinculação com dados de usuário |
+1. **Tabela `eventos`**:
+   - Campos: `id`, `nome`, `palestrante`, `data_evento`, `local`, `capacidade`, `vagas_disponiveis`.
 
-**Observações**: Esta tabela faz referência à tabela `usuario` para garantir que cada administrador seja um usuário do sistema.
+2. **Tabela `presencas`**:
+   - Campos: `id`, `nome_participante`, `cpf_participante`, `evento_id`, `status_presenca`.
 
-### Tabela `comum`
-Armazena dados dos visitantes comuns (não administradores).
+## 7. Como Usar
 
-| Nome do Campo | Tipo          | Chave       | NULL | Descrição                |
-|---------------|---------------|-------------|------|--------------------------|
-| nome          | VARCHAR(100)  | -           | Não  | Nome do visitante        |
-| cpf           | CHAR(11)      | Primária    | Não  | CPF único do visitante   |
+1. **Administrador**:
+   - Acesse a página do administrador em `http://localhost/meu_projeto/public/administrador.html`.
+   - Crie, edite ou exclua eventos usando o formulário.
+   
+2. **Usuário**:
+   - Acesse a página do usuário em `http://localhost/meu_projeto/public/usuario.html`.
+   - Visualize eventos e inscreva-se fornecendo seu nome e CPF.
 
-### Tabela `eventos`
-Contém informações sobre os eventos.
-
-| Nome do Campo    | Tipo          | Chave    | NULL | Descrição                               |
-|------------------|---------------|----------|------|-----------------------------------------|
-| nome             | VARCHAR(100)  | Primária | Não  | Nome do evento                          |
-| data_ev          | DATE          | -        | Não  | Data de realização do evento            |
-| local            | VARCHAR(100)  | -        | Não  | Local onde o evento será realizado      |
-| capacidade_ev    | INT(11)       | -        | Sim  | Capacidade máxima de participantes      |
-| palestrante      | VARCHAR(100)  | -        | Não  | Nome do palestrante responsável pelo evento |
-
-### Tabela `presenca`
-Armazena a presença dos visitantes nos eventos.
-
-| Nome do Campo | Tipo          | Chave       | NULL | Descrição                                                |
-|---------------|---------------|-------------|------|----------------------------------------------------------|
-| nomeComum     | VARCHAR(100)  | -           | Não  | Nome do visitante que participou do evento               |
-| cpfComum      | CHAR(11)      | Primária    | Não  | CPF do visitante, chave estrangeira para `comum(cpf)`    |
-| evento_nome   | VARCHAR(100)  | Primária    | Não  | Nome do evento, chave estrangeira para `eventos(nome)`   |
-
-**Observações**: Esta tabela relaciona visitantes com eventos, registrando a presença através de chaves estrangeiras para `comum` e `eventos`.
-
-### Tabela `usuario`
-Armazena dados dos usuários do sistema e o tipo de cada usuário.
-
-| Nome do Campo | Tipo          | Chave       | NULL | Descrição                                            |
-|---------------|---------------|-------------|------|------------------------------------------------------|
-| nome          | VARCHAR(100)  | -           | Não  | Nome do usuário                                      |
-| cpf           | CHAR(11)      | Primária    | Não  | CPF do usuário, chave estrangeira para `comum(cpf)`  |
-| tipoUsuario   | VARCHAR(50)   | -           | Sim  | Tipo de usuário (por exemplo, "admin" ou "comum")    |
-
-**Observações**: Esta tabela diferencia administradores de usuários comuns, vinculando o CPF do usuário com o CPF dos visitantes na tabela `comum`.
-
-## 4. Relacionamentos
-
-- **admin(cpf)** referencia **usuario(cpf)** para garantir que cada administrador é um usuário.
-- **presenca(cpfComum)** referencia **comum(cpf)** para registrar a presença de visitantes.
-- **presenca(evento_nome)** referencia **eventos(nome)** para associar visitantes a eventos específicos.
-- **usuario(cpf)** referencia **comum(cpf)** para vincular informações de usuários com dados de visitantes.
-
-## 5. Script SQL Completo
-
-O script SQL é responsável pela criação de todas as tabelas e configuração dos relacionamentos mencionados acima.
